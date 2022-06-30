@@ -50,39 +50,37 @@ where
 {
     let size = rect.size();
     check_size(&size);
-    if app.state == AppState::List {
-        let chunks = Layout::default()
-            .direction(Direction::Vertical)
-            .constraints([Constraint::Length(3), Constraint::Min(50)].as_ref())
-            .split(size);
-        let title = Paragraph::new("TODO List")
-            .style(Style::default().fg(Color::LightCyan))
-            .alignment(Alignment::Center)
-            .block(
-                Block::default()
-                    .borders(Borders::ALL)
-                    .style(Style::default().fg(Color::White))
-                    .border_type(BorderType::Plain),
-            );
-
-        rect.render_widget(title.clone(), chunks[0]);
-        let body_content: Vec<Span> = app
-            .list
-            .iter()
-            .map(|item| Span::styled(item.content.clone(), Style::default()))
-            .collect();
-        let body_paragraph = Paragraph::new(Spans::from(body_content)).block(
+    let chunks = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints([Constraint::Length(3), Constraint::Min(50)].as_ref())
+        .split(size);
+    let title = Paragraph::new("TODO List")
+        .style(Style::default().fg(Color::LightCyan))
+        .alignment(Alignment::Center)
+        .block(
             Block::default()
                 .borders(Borders::ALL)
-                .style(Style::default())
+                .style(Style::default().fg(Color::White))
                 .border_type(BorderType::Plain),
         );
 
-        // let body_chunks = Layout::default()
-        //     .direction(Direction::Vertical)
-        //     .split(chunks[1]);
-        rect.render_widget(body_paragraph, chunks[1]);
-    }
+    rect.render_widget(title.clone(), chunks[0]);
+    let body_content: Vec<Span> = app
+        .list
+        .iter()
+        .map(|item| Span::styled(item.content.clone(), Style::default()))
+        .collect();
+    let body_paragraph = Paragraph::new(Spans::from(body_content)).block(
+        Block::default()
+            .borders(Borders::ALL)
+            .style(Style::default())
+            .border_type(BorderType::Plain),
+    );
+
+    // let body_chunks = Layout::default()
+    //     .direction(Direction::Vertical)
+    //     .split(chunks[1]);
+    rect.render_widget(body_paragraph, chunks[1]);
 }
 
 pub fn check_size(rect: &Rect) {

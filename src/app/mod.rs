@@ -2,7 +2,7 @@ use crate::{inputs::keys::Key, todo::ToDo};
 
 use self::{
     actions::{Action, Actions},
-    state::AppState,
+    state::{AppState, ListState, State},
 };
 
 pub mod actions;
@@ -19,14 +19,14 @@ pub struct App {
     /// Contextual actions
     actions: Actions,
     /// State
-    state: AppState,
+    state: Box<dyn State>,
 }
 
 impl App {
     pub fn new() -> Self {
         // for now it could be replaced with impl Default
         let actions = vec![Action::Quit].into();
-        let state = AppState::List;
+        let state = ListState::new();
         let list = vec![ToDo {
             content: String::from("Testing!"),
         }];
@@ -39,13 +39,7 @@ impl App {
 
     /// Handle a user action
     pub fn do_action(&mut self, key: Key) -> AppReturn {
-        if let Some(action) = self.actions.find(key) {
-            match action {
-                Action::Quit => AppReturn::Exit,
-            }
-        } else {
-            AppReturn::Continue
-        }
+        return self.state.do_action(key);
     }
 
     /// We could update the app or dispatch event on tick

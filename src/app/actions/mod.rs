@@ -4,6 +4,9 @@ use std::slice::Iter;
 
 use crate::inputs::keys::Key;
 
+use super::state::State;
+use super::{App, AppReturn};
+
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub enum Action {
     Quit,
@@ -88,5 +91,26 @@ impl From<Vec<Action>> for Actions {
 
         // Ok, we can create contextual actions
         Self(actions)
+    }
+}
+pub trait TestAction {
+    fn execute(&mut self) -> AppReturn;
+    fn keys(&self) -> &Vec<Key>;
+}
+pub struct QuitAction {
+    keys: Vec<Key>,
+}
+impl QuitAction {
+    pub fn new() -> Self {
+        let keys = vec![Key::Ctrl('c'), Key::Char('q')];
+        return Self { keys };
+    }
+}
+impl TestAction for QuitAction {
+    fn execute(&mut self) -> AppReturn {
+        return AppReturn::Exit;
+    }
+    fn keys(&self) -> &Vec<Key> {
+        return &self.keys;
     }
 }
