@@ -2,7 +2,7 @@ use crate::{inputs::keys::Key, todo::ToDo};
 
 use self::{
     actions::{Action, Actions},
-    state::{AppState, ListState, State},
+    state::{ListState, State},
 };
 
 pub mod actions;

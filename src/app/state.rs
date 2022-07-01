@@ -1,20 +1,10 @@
-use std::{
-    cell::{RefCell, RefMut},
-    rc::Rc,
-};
-
 use crate::inputs::keys::Key;
 
 use super::{
-    actions::{QuitAction, TestAction},
-    App, AppReturn,
+    actions::{Action, Actions},
+    AppReturn,
 };
 
-#[derive(Clone, PartialEq)]
-pub enum AppState {
-    List,
-    Edit,
-}
 pub trait State {
     fn do_action(&mut self, key: Key) -> AppReturn;
 }
@@ -29,32 +19,26 @@ impl State for EditingState {
         todo!()
     }
 }
+//TODO: Too complicated for first app. Instead of doing this, just have
+//a mapping of keys to action enum. Then, in do_action, do stuff based on that
+//action enum. Simplify this later, don't do it first
 pub struct ListState {
-    actions: Vec<Box<dyn TestAction>>,
-    config: ListConfig,
+    actions: Actions,
 }
 impl ListState {
     pub fn new() -> Box<Self> {
-        let actions: Vec<Box<dyn TestAction>> = vec![Box::new(QuitAction::new())];
-        let config = ListConfig { test: 1 };
-        return Box::new(Self { actions, config });
+        let actions = vec![Action::Quit].into();
+        return Box::new(Self { actions });
     }
 }
 impl State for ListState {
     fn do_action(&mut self, key: Key) -> AppReturn {
-        self.actions
-            .iter_mut()
-            .find(|action| action.keys().contains(&key))
-            .unwrap()
-            .execute()
-    }
-}
-pub struct ListConfig {
-    test: i32,
-}
-
-impl Default for AppState {
-    fn default() -> Self {
-        Self::List
+        if let Some(action) = self.actions.find(key) {
+            match action {
+                Action::Quit => AppReturn::Exit,
+            }
+        } else {
+            return AppReturn::Continue;
+        }
     }
 }

@@ -14,7 +14,7 @@ use tui::{
 
 use crate::inputs::{events::Events, InputEvent};
 
-use super::{state::AppState, App, AppReturn};
+use super::{App, AppReturn};
 
 pub fn start_ui(app: &mut App) -> Result<(), Error> {
     let stdout = stdout();
