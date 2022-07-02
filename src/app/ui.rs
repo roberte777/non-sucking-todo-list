@@ -30,7 +30,8 @@ pub fn start_ui(app: &mut App) -> Result<(), Error> {
 
     //main loop
     loop {
-        terminal.draw(|rect| draw(rect, &app))?;
+        // terminal.draw(|rect| draw(rect, &app))?;
+        terminal.draw(|rect| app.state.draw(rect, &app))?;
         let result = match events.next().unwrap() {
             InputEvent::Input(key) => app.do_action(key),
             InputEvent::Tick => app.update_on_tick(),

@@ -43,7 +43,7 @@ pub struct ListState {
 }
 impl ListState {
     pub fn new() -> Box<Self> {
-        let actions = vec![Action::Quit, Action::SelectNext, Action::SelectPrev].into();
+        let actions = vec![Action::Quit].into();
         return Box::new(Self {
             actions,
             selected: 0,
@@ -55,11 +55,10 @@ impl ListState {
 }
 impl State for ListState {
     fn do_action(&mut self, key: Key) -> AppReturn {
+        test(self);
         if let Some(action) = self.actions.find(key) {
             match action {
                 Action::Quit => AppReturn::Exit,
-                Action::SelectNext => AppReturn::Continue,
-                _ => AppReturn::Continue,
             }
         } else {
             return AppReturn::Continue;
@@ -87,15 +86,9 @@ impl State for ListState {
             .list
             .iter()
             .enumerate()
-            .map(|(i, item)| {
-                let mut cursor = " ";
-                if i == self.selected.try_into().unwrap() {
-                    cursor = ">";
-                }
-                return Span::styled(
-                    String::from(cursor) + &item.content.clone(),
-                    Style::default(),
-                );
+            .map(|(i,item)| {
+                if item.
+                return Span::styled(item.content.clone(), Style::default());
             })
             .collect();
         let body_paragraph = Paragraph::new(Spans::from(body_content)).block(
@@ -108,3 +101,4 @@ impl State for ListState {
         rect.render_widget(body_paragraph, chunks[1]);
     }
 }
+pub fn test(t: &mut ListState) {}

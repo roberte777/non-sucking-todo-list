@@ -7,6 +7,8 @@ use crate::inputs::keys::Key;
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub enum Action {
     Quit,
+    SelectNext,
+    SelectPrev,
 }
 
 impl Action {
@@ -20,6 +22,8 @@ impl Action {
     pub fn keys(&self) -> &[Key] {
         match self {
             Action::Quit => &[Key::Ctrl('c'), Key::Char('q')],
+            Action::SelectNext => &[Key::Char('j')],
+            Action::SelectPrev => &[Key::Char('k')],
         }
     }
 }
@@ -29,6 +33,8 @@ impl Display for Action {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let str = match self {
             Action::Quit => "Quit",
+            Action::SelectNext => "Selecting Next ToDo",
+            Action::SelectPrev => "Selecting Previous ToDo",
             // Action::Sleep => "Sleep",
             // Action::IncrementDelay => "Increment delay",
             // Action::DecrementDelay => "Decrement delay",
