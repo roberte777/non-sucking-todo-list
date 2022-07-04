@@ -1,9 +1,6 @@
-use crate::{inputs::keys::Key, todo::ToDo};
+use crate::todo::ToDo;
 
-use self::{
-    actions::{Action, Actions},
-    state::{ListState, State},
-};
+use self::state::{global_state::GlobalState, ListState, State};
 
 pub mod actions;
 pub mod state;
@@ -15,9 +12,7 @@ pub enum AppReturn {
 }
 
 pub struct App {
-    list: Vec<ToDo>,
-    /// Contextual actions
-    actions: Actions,
+    global_state: GlobalState,
     /// State
     state: Box<dyn State>,
 }
@@ -25,21 +20,15 @@ pub struct App {
 impl App {
     pub fn new() -> Self {
         // for now it could be replaced with impl Default
-        let actions = vec![Action::Quit].into();
         let state = ListState::new();
         let list = vec![ToDo {
             content: String::from("Testing!"),
         }];
+        let global_state = GlobalState { list };
         Self {
-            actions,
             state,
-            list,
+            global_state,
         }
-    }
-
-    /// Handle a user action
-    pub fn do_action(&mut self, key: Key) -> AppReturn {
-        return self.state.do_action(key);
     }
 
     /// We could update the app or dispatch event on tick

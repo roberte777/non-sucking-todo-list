@@ -8,32 +8,17 @@ use tui::{
     Frame,
 };
 
-use crate::inputs::keys::Key;
-
-use super::{
-    actions::{Action, Actions},
-    ui::check_size,
-    App, AppReturn,
+use crate::{
+    app::{
+        actions::{Action, Actions},
+        ui::check_size,
+        App, AppReturn, GlobalState,
+    },
+    inputs::keys::Key,
 };
 
-pub trait State {
-    fn do_action(&mut self, key: Key) -> AppReturn;
-    fn draw(&self, rect: &mut Frame<tui::backend::CrosstermBackend<Stdout>>, app: &App);
-}
-pub struct EditingState {}
-impl EditingState {
-    pub fn new() -> Box<Self> {
-        return Box::new(Self {});
-    }
-}
-impl State for EditingState {
-    fn do_action(&mut self, key: Key) -> AppReturn {
-        todo!()
-    }
-    fn draw(&self, rect: &mut Frame<tui::backend::CrosstermBackend<Stdout>>, app: &App) {
-        todo!()
-    }
-}
+use super::State;
+
 //TODO: Too complicated for first app. Instead of doing this, just have
 //a mapping of keys to action enum. Then, in do_action, do stuff based on that
 //action enum. Simplify this later, don't do it first
@@ -43,22 +28,20 @@ pub struct ListState {
 }
 impl ListState {
     pub fn new() -> Box<Self> {
-        let actions = vec![Action::Quit].into();
+        let actions = vec![Action::Quit, Action::SelectNext, Action::SelectPrev].into();
         return Box::new(Self {
             actions,
             selected: 0,
         });
     }
-    pub fn test(&self) {
-        println!("test")
-    }
 }
 impl State for ListState {
-    fn do_action(&mut self, key: Key) -> AppReturn {
-        test(self);
+    fn do_action(&mut self, key: Key, app: &GlobalState) -> AppReturn {
         if let Some(action) = self.actions.find(key) {
             match action {
                 Action::Quit => AppReturn::Exit,
+                Action::SelectNext => AppReturn::Continue,
+                _ => AppReturn::Continue,
             }
         } else {
             return AppReturn::Continue;
@@ -83,12 +66,19 @@ impl State for ListState {
 
         rect.render_widget(title.clone(), chunks[0]);
         let body_content: Vec<Span> = app
+            .global_state
             .list
             .iter()
             .enumerate()
-            .map(|(i,item)| {
-                if item.
-                return Span::styled(item.content.clone(), Style::default());
+            .map(|(i, item)| {
+                let mut cursor = " ";
+                if i == self.selected.try_into().unwrap() {
+                    cursor = ">";
+                }
+                return Span::styled(
+                    String::from(cursor) + &item.content.clone(),
+                    Style::default(),
+                );
             })
             .collect();
         let body_paragraph = Paragraph::new(Spans::from(body_content)).block(
@@ -101,4 +91,3 @@ impl State for ListState {
         rect.render_widget(body_paragraph, chunks[1]);
     }
 }
-pub fn test(t: &mut ListState) {}

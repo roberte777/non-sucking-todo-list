@@ -33,7 +33,7 @@ pub fn start_ui(app: &mut App) -> Result<(), Error> {
         // terminal.draw(|rect| draw(rect, &app))?;
         terminal.draw(|rect| app.state.draw(rect, &app))?;
         let result = match events.next().unwrap() {
-            InputEvent::Input(key) => app.do_action(key),
+            InputEvent::Input(key) => app.state.do_action(key, &app.global_state),
             InputEvent::Tick => app.update_on_tick(),
         };
         if result == AppReturn::Exit {
@@ -67,6 +67,7 @@ where
 
     rect.render_widget(title.clone(), chunks[0]);
     let body_content: Vec<Span> = app
+        .global_state
         .list
         .iter()
         .map(|item| Span::styled(item.content.clone(), Style::default()))
