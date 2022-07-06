@@ -1,6 +1,6 @@
-use crate::todo::ToDo;
+use crate::{inputs::keys::Key, todo::ToDo};
 
-use self::state::{global_state::GlobalState, ListState, State};
+use self::state::{global_state::GlobalState, EditingState, ListState, State};
 
 pub mod actions;
 pub mod state;
@@ -10,10 +10,13 @@ pub enum AppReturn {
     Exit,
     Continue,
 }
+pub enum Transition {
+    Editing,
+    List,
+}
 
 pub struct App {
     global_state: GlobalState,
-    /// State
     state: Box<dyn State>,
 }
 
@@ -28,6 +31,21 @@ impl App {
         Self {
             state,
             global_state,
+        }
+    }
+
+    pub fn do_action(&mut self, key: Key) -> AppReturn {
+        let state_return = self.state.do_action(key, &mut self.global_state);
+        if let Some(transition) = state_return.transition {
+            self.transition(transition);
+        }
+        return state_return.app_return;
+    }
+
+    fn transition(&mut self, transition_to: Transition) {
+        match transition_to {
+            Transition::List => self.state = ListState::new(),
+            Transition::Editing => self.state = EditingState::new(),
         }
     }
 

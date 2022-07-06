@@ -10,25 +10,30 @@ use tui::{
 
 use crate::{
     app::{
-        actions::{Action, Actions},
+        actions::{ListAction, ListActions},
         ui::check_size,
-        App, AppReturn, GlobalState,
+        App, AppReturn, GlobalState, Transition,
     },
     inputs::keys::Key,
 };
 
-use super::State;
+use super::{State, StateReturn};
 
 //TODO: Too complicated for first app. Instead of doing this, just have
 //a mapping of keys to action enum. Then, in do_action, do stuff based on that
 //action enum. Simplify this later, don't do it first
 pub struct ListState {
-    actions: Actions,
+    actions: ListActions,
     selected: u32,
 }
 impl ListState {
     pub fn new() -> Box<Self> {
-        let actions = vec![Action::Quit, Action::SelectNext, Action::SelectPrev].into();
+        let actions = vec![
+            ListAction::Quit,
+            ListAction::SelectNext,
+            ListAction::SelectPrev,
+        ]
+        .into();
         return Box::new(Self {
             actions,
             selected: 0,
@@ -36,15 +41,31 @@ impl ListState {
     }
 }
 impl State for ListState {
-    fn do_action(&mut self, key: Key, app: &GlobalState) -> AppReturn {
+    fn do_action(&mut self, key: Key, _app: &GlobalState) -> StateReturn {
         if let Some(action) = self.actions.find(key) {
             match action {
-                Action::Quit => AppReturn::Exit,
-                Action::SelectNext => AppReturn::Continue,
-                _ => AppReturn::Continue,
+                ListAction::Quit => StateReturn {
+                    transition: None,
+                    app_return: AppReturn::Exit,
+                },
+                ListAction::SelectNext => StateReturn {
+                    transition: None,
+                    app_return: AppReturn::Continue,
+                },
+                ListAction::Edit => StateReturn {
+                    transition: Some(Transition::Editing),
+                    app_return: AppReturn::Continue,
+                },
+                _ => StateReturn {
+                    transition: None,
+                    app_return: AppReturn::Continue,
+                },
             }
         } else {
-            return AppReturn::Continue;
+            return StateReturn {
+                transition: None,
+                app_return: AppReturn::Continue,
+            };
         }
     }
     fn draw(&self, rect: &mut Frame<tui::backend::CrosstermBackend<Stdout>>, app: &App) {
