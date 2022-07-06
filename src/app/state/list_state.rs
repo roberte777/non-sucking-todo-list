@@ -48,10 +48,14 @@ impl State for ListState {
                     transition: None,
                     app_return: AppReturn::Exit,
                 },
-                ListAction::SelectNext => StateReturn {
-                    transition: None,
-                    app_return: AppReturn::Continue,
-                },
+                ListAction::SelectNext => {
+                    self.selected = self.selected + 1;
+
+                    return StateReturn {
+                        transition: None,
+                        app_return: AppReturn::Continue,
+                    };
+                }
                 ListAction::Edit => StateReturn {
                     transition: Some(Transition::Editing),
                     app_return: AppReturn::Continue,
@@ -86,7 +90,7 @@ impl State for ListState {
             );
 
         rect.render_widget(title.clone(), chunks[0]);
-        let body_content: Vec<Span> = app
+        let body_content: Vec<Spans> = app
             .global_state
             .list
             .iter()
@@ -96,13 +100,13 @@ impl State for ListState {
                 if i == self.selected.try_into().unwrap() {
                     cursor = ">";
                 }
-                return Span::styled(
+                return Spans::from(Span::styled(
                     String::from(cursor) + &item.content.clone(),
                     Style::default(),
-                );
+                ));
             })
             .collect();
-        let body_paragraph = Paragraph::new(Spans::from(body_content)).block(
+        let body_paragraph = Paragraph::new(body_content).block(
             Block::default()
                 .borders(Borders::ALL)
                 .style(Style::default())

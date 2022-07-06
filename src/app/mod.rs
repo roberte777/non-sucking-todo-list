@@ -24,9 +24,146 @@ impl App {
     pub fn new() -> Self {
         // for now it could be replaced with impl Default
         let state = ListState::new();
-        let list = vec![ToDo {
-            content: String::from("Testing!"),
-        }];
+        let list = vec![
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+            ToDo {
+                content: String::from("Testing!"),
+            },
+        ];
         let global_state = GlobalState { list };
         Self {
             state,
